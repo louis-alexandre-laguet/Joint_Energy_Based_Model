@@ -1,20 +1,20 @@
 # Joint Energy-Based Model
 
-JEM (*Joint Energy-Based Model*) est un modèle basé sur l’énergie (EBM) qui combine **classification** et **génération d’images**. Il apprend simultanément la probabilité d’une image $p_{\theta}(x)$ et la probabilité conditionnelle d’une classe $p_{\theta}(y | x)$, permettant ainsi de classer des images tout en générant de nouvelles données.  
+JEM (*Joint Energy-Based Model*) is an energy-based model (EBM) that combines **classification** and **image generation**. It simultaneously learns the probability of an image $p_{\theta}(x)$ and the conditional probability of a class $p_{\theta}(y | x)$, enabling it to classify images while also generating new data.
 
-JEM repose sur un **réseau de neurones convolutif** qui extrait des caractéristiques des images et produit deux sorties principales :  
+JEM is based on a **convolutional neural network** that extracts features from images and produces two main outputs:
 
-- **L'énergie** : $E_{\theta}(x)$ mesure la plausibilité de l’image dans l’espace appris par le modèle.
-- **Les logits de classification** : $f_{\theta}(x)$ utilisés pour prédire la classe de l’image.  
+- **Energy**: $E_{\theta}(x)$ measures the plausibility of the image in the space learned by the model.
+- **Classification logits**: $f_{\theta}(x)$ are used to predict the class of the image.
 
+The training of JEM relies on several objectives:
+1. **Supervised classification**: A standard classification loss, such as cross-entropy, is used to associate an image with a label.
+2. **Contrastive divergence**: A regularization term that helps distinguish true images from generated samples.
+3. **Energy regularization**: A constraint on $E_{\theta}(x)$ to improve the model’s stability and robustness.
 
-L'entraînement de JEM repose sur plusieurs objectifs :  
-1. **Classification supervisée** : Une perte de classification standard, comme l'entropie croisée, pour associer une image à un label.  
-2. **Divergence contrastive** : Une régularisation qui aide à différencier les vraies images des échantillons générés.  
-3. **Régularisation de l’énergie** : Une contrainte sur $E_{\theta}(x)$ pour améliorer la stabilité et la robustesse du modèle.  
+JEM generates images using a **Langevin dynamics** approach:
+1. **Initialization**: The process starts with an image consisting of random noise.
+2. **Progressive refinement**: An **MCMC (Monte Carlo Markov Chain)** algorithm gradually modifies the image to make it more realistic. At each iteration, the image is adjusted by reducing its energy, moving it closer to a plausible sample from the model.
+3. **Diversification**: A **resampling buffer** is used to avoid generating the same images repeatedly and ensure a greater variety in the produced samples.
 
-JEM génère des images en utilisant une approche basée sur la **dynamique de Langevin** :
-1. **Initialisation** : On commence avec une image contenant uniquement du bruit aléatoire.  
-2. **Affinement progressif** : Un algorithme de type **MCMC (Monte Carlo Markov Chain)** modifie progressivement l’image pour la rendre plus réaliste. À chaque itération, l’image est ajustée en réduisant son énergie, de manière à se rapprocher d’un échantillon plausible du modèle.  
-3. **Diversification** : Un **buffer de rééchantillonnage** est utilisé pour éviter de générer toujours les mêmes images et garantir une plus grande variété dans les échantillons produits.
-Grâce à cette approche, JEM permet d’unifier **classification** et **génération**, exploitant ainsi pleinement les propriétés des modèles basés sur l’énergie.  
+With this approach, JEM unifies **classification** and **generation**, fully exploiting the properties of energy-based models.
